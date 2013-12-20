@@ -8,26 +8,62 @@ require_once './FacebookApp.php';
 define('FACE_APP_ID', '369427636414937');
 define('FACE_APP_SECRET', '6ccddd805af4ca4e2eaa19a5a150d91f');
 
+$conn = new \PDO("mysql:host=localhost;dbname=phpbrasil", "root", "");
+$conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+$conn->setAttribute(1002, 'SET NAMES utf8');
+$conn->exec("set names utf8");
 
-$face = new FacebookApp();
-$face->setAccessToken(FACE_APP_ID . '|' . FACE_APP_SECRET);
-$feeds = $face->getFeed('14811750159');
+function store($feeds){
+    foreach ($feeds['data'] as $post) {
+        global $conn;
+        $stmte = $conn->prepare("INSERT INTO post(nome, post, idpost,datacadastro) VALUES 
+											(:nome, :post, :idpost,:datacadastro)");
 
-foreach ($feeds['data'] as $post) {
-    echo htmlspecialchars($post['message']) . '<br>';
-    echo "<hr>";
+        $stmte->bindParam(":nome", $post['from']['name'], \PDO::PARAM_STR);
+        $stmte->bindParam(":post", $post['message'], \PDO::PARAM_STR);
+        $stmte->bindParam(":idpost", $post['id'], \PDO::PARAM_STR);
+        $stmte->bindParam(":datacadastro", $post['updated_time'], \PDO::PARAM_STR);
+        $executa = $stmte->execute();
+
+        if (is_array($post['comments']['data'])) {
+            foreach ($post['comments']['data'] as $comment) {
+                $stmte = $conn->prepare("INSERT INTO comment(message, from_name, from_id, idcomment, idpost) VALUES 
+											(:message, :from_name, :from_id, :idcomment, :idpost)");
+
+
+                $stmte->bindParam(":message", $comment['message'], \PDO::PARAM_STR);
+                $stmte->bindParam(":from_name", $comment['from']['name'], \PDO::PARAM_STR);
+                $stmte->bindParam(":from_id", $comment['from']['id'], \PDO::PARAM_STR);
+                $stmte->bindParam(":idcomment", $comment['id'], \PDO::PARAM_STR);
+                $stmte->bindParam(":idpost", $post['id'], \PDO::PARAM_STR);
+                $executa = $stmte->execute();
+            }
+        }
+    }
+}
+//    session_destroy();
+if (!isset($_SESSION['query'])) {
+    $face = new FacebookApp();
+    $face->setAccessToken(FACE_APP_ID . '|' . FACE_APP_SECRET);
+    $feeds = $face->getFeed('14811750159');
+    store($feeds);
+    
+    $parse = parse_url($feeds['paging']['next']);
+    $_SESSION['query'] = $parse['query'];
+    
+    
+//    session_destroy();
+} else {
+    $face = new FacebookApp();
+    $face->setAccessToken(FACE_APP_ID . '|' . FACE_APP_SECRET);
+    $aQuery = explode('&', $_SESSION['query'] );
+    $feeds = $face->getFeed2('14811750159', $aQuery[2]);
+    store($feeds);
+    
+    $parse = parse_url($feeds['paging']['next']);
+    $_SESSION['query'] = $parse['query'];
 }
 
-$parse = parse_url($feeds['paging']['next']);
-$aQuery = explode('&',$parse['query']);
-
-$feeds = $face->getFeed2('14811750159', $aQuery[2]);
-
-
-foreach ($feeds['data'] as $post) {
-    echo htmlspecialchars($post['message']) . '<br>';
-    echo "<hr>";
-}
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="pt" class="no-js ie6"> <![endif]-->
@@ -38,7 +74,7 @@ foreach ($feeds['data'] as $post) {
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!--<meta http-equiv="refresh" content="1">-->
+        <meta http-equiv="refresh" content="1">
     </head>
     <body>
         <h2>Enviando...</h2>

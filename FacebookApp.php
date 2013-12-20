@@ -39,6 +39,7 @@ class FacebookApp extends Facebook
 		}
 		return false;
 	}
+    
 }
 
 ?>
