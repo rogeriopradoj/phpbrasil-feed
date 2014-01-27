@@ -23,17 +23,11 @@ class FacebookApp extends Facebook
 			return false;
 		}
 	}
-	
-	public function getFeed($groupId){
-		$feed=  $this->api($groupId . '/feed?fields=message%2Cfrom%2Ccomments.limit(100).fields(from%2Cmessage)&limit=50', 'get');
-		if(isset($feed['data'])){
-			return $feed;
-		}
-		return false;
-	}
-    
-	public function getFeed2($groupId,$until){
-		$feed=  $this->api($groupId . '/feed?fields=message%2Cfrom%2Ccomments.limit(100).fields(from%2Cmessage)&limit=50&'. $until, 'get');
+	    
+	public function getFeed($groupId, $until = null){
+        $until = $until ? '&'. $until : '';
+        $query = $groupId . '/feed?fields=message%2Cfrom%2Ccomments.limit(100).fields(from%2Cmessage)&limit=50'. $until;
+		$feed=  $this->api($query, 'get');
 		if(isset($feed['data'])){
 			return $feed;
 		}
