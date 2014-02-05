@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('America/Sao_Paulo');
 
-$conn = new \PDO("mysql:host=localhost;dbname=phpbrasil", "root", "");
+$conn = new \PDO("mysql:host=localhost;dbname=phpbrasil", "root", "58347105");
 $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 $conn->setAttribute(1002, 'SET NAMES utf8');
 $conn->exec("set names utf8");

@@ -8,7 +8,7 @@ require_once './FacebookApp.php';
 define('FACE_APP_ID', '369427636414937');
 define('FACE_APP_SECRET', '6ccddd805af4ca4e2eaa19a5a150d91f');
 
-$conn = new \PDO("mysql:host=localhost;dbname=phpbrasil", "root", "");
+$conn = new \PDO("mysql:host=localhost;dbname=phpbrasil", "root", "58347105");
 $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 $conn->setAttribute(1002, 'SET NAMES utf8');
 $conn->exec("set names utf8");
@@ -27,7 +27,7 @@ function store($feeds){
         $date = new DateTime($post['updated_time']);
         $dateinsert = $date->format('Y-m-d H:i:s');
         
-        if($date < $dtLastInsert){
+        if($date >= $dtLastInsert){
             header('location: atualizado.php');
             exit;
         }
@@ -62,9 +62,10 @@ function store($feeds){
 //var_dump($_SESSION['query']);
 //exit;
 
+$face = new FacebookApp();
+$face->setAccessToken(FACE_APP_ID . '|' . FACE_APP_SECRET);
+
 if (!isset($_SESSION['query'])) {
-    $face = new FacebookApp();
-    $face->setAccessToken(FACE_APP_ID . '|' . FACE_APP_SECRET);
     $feeds = $face->getFeed('14811750159');
     store($feeds);
     
@@ -72,8 +73,6 @@ if (!isset($_SESSION['query'])) {
     $_SESSION['query'] = $parse['query'];
     
 } else {
-    $face = new FacebookApp();
-    $face->setAccessToken(FACE_APP_ID . '|' . FACE_APP_SECRET);
     $aQuery = explode('&', $_SESSION['query'] );
     $feeds = $face->getFeed('14811750159', $aQuery[2]);
     store($feeds);

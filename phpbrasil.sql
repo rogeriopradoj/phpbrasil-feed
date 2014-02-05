@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 20, 2013 at 08:28 PM
+-- Generation Time: Jan 28, 2014 at 01:22 PM
 -- Server version: 5.1.36
 -- PHP Version: 5.3.0
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `idcomment` varchar(200) NOT NULL,
   `idpost` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=587559 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=700782 ;
 
 -- --------------------------------------------------------
 
@@ -46,6 +46,6 @@ CREATE TABLE IF NOT EXISTS `post` (
   `nome` varchar(250) NOT NULL,
   `post` text,
   `idpost` varchar(200) NOT NULL,
-  `datacadastro` varchar(200) NOT NULL,
+  `datacadastro` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50625 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63628 ;
