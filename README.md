@@ -1,3 +1,4 @@
-# PHP Brasil feed
-=======================
-O conteúdo postado no grupo do Facebook não é indexado pelo Google, logo toda discursão que é feita no grupo é quasse que perdida. Por isso a ideia de consumir 
+PHP Brasil feed
+===============
+
+O conteúdo postado no [grupo do Facebook](https://www.facebook.com/groups/nao.tem.biscoito/) não é indexado pelo Google, logo toda discussão que é feita no grupo é quase que perdida. Por isso a ideia de consumir 
